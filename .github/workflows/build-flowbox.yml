@@ -28,6 +28,14 @@ jobs:
       - name: Install ARM toolchain
         working-directory: betaflight
         run: make arm_sdk_install
+        
+      - name: Verify custom HSE configuration
+        working-directory: betaflight
+        run: |
+          echo "Checking custom FLOWBOXV2 config:"
+          grep -n "SYSTEM_HSE_MHZ" ../config/configs/NERC/FLOWBOXV2/config.h
+          echo "Checking config directory:"
+          ls -la ../config/configs/NERC/FLOWBOXV2/
 
       - name: Build FLOWBOXV2
         working-directory: betaflight
