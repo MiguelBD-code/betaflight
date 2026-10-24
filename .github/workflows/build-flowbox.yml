@@ -36,6 +36,11 @@ jobs:
           grep -n "SYSTEM_HSE_MHZ" ../config/configs/NERC/FLOWBOXV2/config.h
           echo "Checking config directory:"
           ls -la ../config/configs/NERC/FLOWBOXV2/
+        
+      - name: Verify compiled HSE value
+        working-directory: betaflight
+        run: |
+          make -pn CONFIG=FLOWBOXV2 BETAFLIGHT_CONFIG=../config 2>/dev/null | grep -E '^(CONFIG_HEADER_FILE|HSE_VALUE_MHZ|HSE_VALUE) ?[:=]'
 
       - name: Build FLOWBOXV2
         working-directory: betaflight
