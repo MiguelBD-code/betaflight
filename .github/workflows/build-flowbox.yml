@@ -1,0 +1,42 @@
+
+name: Build FLOWBOXV2 custom firmware
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout firmware
+        uses: actions/checkout@v5
+        with:
+          path: betaflight
+          submodules: recursive
+
+      - name: Checkout my custom config
+        uses: actions/checkout@v5
+        with:
+          repository: MiguelBD-code/config
+          ref: master
+          path: config
+
+      - name: Install ARM toolchain
+        working-directory: betaflight
+        run: make arm_sdk_install
+
+      - name: Build FLOWBOXV2
+        working-directory: betaflight
+        run: make CONFIG=FLOWBOXV2 BETAFLIGHT_CONFIG=../config
+
+      - name: Upload firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: FLOWBOXV2-custom-firmware
+          path: betaflight/obj/*.hex
+          if-no-files-found: error
+          retention-days: 7
